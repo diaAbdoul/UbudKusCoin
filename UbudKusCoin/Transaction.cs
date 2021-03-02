@@ -16,10 +16,19 @@ namespace Main
         public double Amount { set; get; }
         public float Fee { set; get; }
 
-        public static void AddToPool(Transaction transaction)
+        public static bool AddToPool(Transaction transaction)
         {
-            var trxPool = GetPool();
-            trxPool.Insert(transaction);
+            try
+            {
+                var trxPool = GetPool();
+                trxPool.Insert(transaction);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+           
         }
 
         public static void Add(Transaction transaction)

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using UbudKusCoin;
 using System;
+using UbudKusCoin.Main;
 
 namespace Main
 {
@@ -13,9 +14,6 @@ namespace Main
 
         public Blockchain()
         {
-            // db
-            DbAccess.Initialize();
-
             Initialize();
 
             //initilize stake
@@ -101,6 +99,20 @@ namespace Main
             return block;
         }
 
+
+        public static Block GetBlockByHeight(int height)
+        {
+            var coll = GetBlocks();
+            var block = coll.Query().Where(x => x.Height == height).ToEnumerable();
+            if (block.Any())
+            {
+                return block.FirstOrDefault();
+            }
+            return null;           
+        }
+
+
+
         public static long GetHeight()
         {
             var lastBlock = GetLastBlock();
@@ -111,6 +123,53 @@ namespace Main
         {
             var blocks = GetBlocks();
             blocks.Insert(block);
+        }
+
+
+        public static int GetAdjustedDifficulty(Block latestBlock) {
+
+            var blocks = GetBlocks();
+            Console.WriteLine("==== GetAdjustedDifficulty");
+            var prevAdjustmentBlock = GetBlockByHeight(blocks.Count() - Constants.DIFFICULTY_ADJUSTMENT_INTERVAL);
+
+            Console.WriteLine("prevAdjustmentBlock: " + prevAdjustmentBlock.TimeStamp);
+            Console.WriteLine("latestBlock: " + latestBlock.TimeStamp);
+
+            var timeExpected = Constants.BLOCK_GENERATION_INTERVAL * Constants.DIFFICULTY_ADJUSTMENT_INTERVAL;
+            Console.WriteLine("timeExpected:" + timeExpected);
+
+            var timeTaken  = latestBlock.TimeStamp - prevAdjustmentBlock.TimeStamp;
+            Console.WriteLine("timeTaken:" + timeTaken);
+
+            if (timeTaken < (timeExpected / 2))
+            {
+                return prevAdjustmentBlock.Difficulty + 1;
+            }
+            else if (timeTaken > timeExpected * 2)
+            {
+                return prevAdjustmentBlock.Difficulty - 1;
+            }
+            else
+            {
+                return prevAdjustmentBlock.Difficulty;
+            }
+
+        }
+
+        public static int GetDifficullty()
+        {
+            var latestBlock = GetLastBlock();
+            Console.WriteLine("latestBlock.Height:" + latestBlock.Height);
+            // Console.WriteLine("Constants.DIFFICULTY_ADJUSTMENT_INTERVAL:" + Constants.DIFFICULTY_ADJUSTMENT_INTERVAL);
+
+            if (latestBlock.Height % Constants.DIFFICULTY_ADJUSTMENT_INTERVAL  == 0 && latestBlock.Height != 0)
+            {
+                return GetAdjustedDifficulty(latestBlock);
+            }
+            else
+            {
+                return latestBlock.Difficulty;
+            }
         }
 
         public static void BuildNewBlock()
@@ -168,11 +227,16 @@ namespace Main
                 TimeStamp = timestamp,
                 PrevHash = prevHash,
                 Transactions = transactions,
+                Difficulty = GetDifficullty(),
                 Validator = validator
             };
             block.Build();
             AddBlock(block);
-            PrintBlock(block);
+
+            // event
+            // Block created 
+
+           // PrintBlock(block);
 
             // move all record in trx pool to transactions table
             foreach (var trx in transactions)
@@ -180,7 +244,9 @@ namespace Main
                 Transaction.Add(trx);
             }
 
-          
+      
+
+
         }
 
         private static float GetTotalFees(IList<Transaction> txs)
@@ -191,7 +257,7 @@ namespace Main
 
         private static void PrintBlock(Block block)
         {
-            Console.WriteLine("\n===========\nNew Block created");
+            Console.WriteLine("\n===========\nNew Block");
             Console.WriteLine(" = Height      : {0}", block.Height);
             Console.WriteLine(" = Version     : {0}", block.Version);
             Console.WriteLine(" = Prev Hash   : {0}", block.PrevHash);

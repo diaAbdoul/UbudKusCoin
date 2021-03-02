@@ -30,7 +30,6 @@ namespace Main
             TotalReward = GetTotalFees();
             MerkleRoot = GetMerkleRoot();
             Hash = GetBlockHash();
-            Difficulty = 1;
         }
 
         private float GetTotalFees()

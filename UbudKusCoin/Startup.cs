@@ -1,11 +1,9 @@
-﻿using Coravel;
-using GrpcService.Services;
+﻿using GrpcService.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using UbudKusCoin.Sceduler;
 
 namespace Main
 {
@@ -16,8 +14,8 @@ namespace Main
         public static void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddScheduler();
-            services.AddTransient<BlockJob>();
+            //services.AddScheduler();
+            //services.AddTransient<BlockJob>();
 
             services.AddGrpc();
             //services.AddCors(o => o.AddPolicy("AllowAll", builder =>

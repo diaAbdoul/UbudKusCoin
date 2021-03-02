@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Grpc.Core;
 using Main;
 using Newtonsoft.Json;
+using UbudKusCoin;
 
 namespace GrpcService.Services
 {

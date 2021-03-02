@@ -1,9 +1,12 @@
 ﻿syntax = "proto3";
 
+import "Grpc/Protos/version.proto";
+
 option csharp_namespace = "GrpcService";
 
 
 service BChainService {
+	rpc SendVersion(VersionRequest) returns (VesionResponse);
   rpc GenesisBlock(EmptyRequest) returns (BlockResponse);
   rpc LastBlock(EmptyRequest)  returns (BlockResponse);
   rpc SendCoin(SendRequest)  returns (TrxResponse);

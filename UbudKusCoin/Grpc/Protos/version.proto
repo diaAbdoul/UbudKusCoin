@@ -1,0 +1,17 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "GrpcService";
+
+message VersionModel{
+   int32 version = 1;
+   int64 best_height = 2;
+   string addr_from = 3;
+}
+
+message VersionRequest{
+    VersionModel data = 1;
+}
+
+message VesionResponse{
+    VersionModel data =1;
+}
