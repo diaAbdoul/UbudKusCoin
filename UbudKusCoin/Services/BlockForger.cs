@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Main;
 using UbudKusCoin.Main;
 
-namespace UbudKusCoin
+namespace UbudKusCoin.Services
 {
     public class BlockForger
     {

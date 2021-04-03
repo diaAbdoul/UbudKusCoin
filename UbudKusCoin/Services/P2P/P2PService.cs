@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
-using GrpcService.Services;
+using UbudKusCoin.Services;
 
-namespace UbudKusCoin.P2P
+namespace UbudKusCoin.Services.P2P
 {
     public class P2PService
     {

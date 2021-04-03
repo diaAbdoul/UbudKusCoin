@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading;
 using TcpClient = NetCoreServer.TcpClient;
 
-namespace UbudKusCoin.P2P
+namespace UbudKusCoin.Services.P2P
 {
     public class P2PClient : TcpClient
     {

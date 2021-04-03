@@ -3,8 +3,8 @@ using System.Net;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Hosting;
-using UbudKusCoin;
-using UbudKusCoin.P2P;
+using UbudKusCoin.Services;
+using UbudKusCoin.Services.P2P;
 
 namespace Main
 {
@@ -13,16 +13,20 @@ namespace Main
         public static void Main(string[] args)
         {
 
-            
+         
 
             // TCP server port
-            int port = 80;
-
+            int port = 3000;
+            string[] nodePort = { port.ToString() };
             if (args.Length > 0)
+            {
                 port = int.Parse(args[0]);
+                nodePort[0] = args[0];
+            }
 
+            // db need port for name databse in case
+            // all node run on one machine same folder
 
-            // db
             DbAccess.Initialize(port);
 
             // blockchain
@@ -50,7 +54,7 @@ namespace Main
             }    
 
             // grpc
-            IHost host = CreateHostBuilder(args).Build();
+            IHost host = CreateHostBuilder(nodePort).Build();
             //host.Services.UseScheduler(scheduler =>
             //{
             //    scheduler.Schedule<BlockJob>()

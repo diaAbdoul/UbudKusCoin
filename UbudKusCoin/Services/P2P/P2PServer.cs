@@ -4,7 +4,7 @@ using System.Net.Sockets;
 using System.Text;
 using NetCoreServer;
 
-namespace UbudKusCoin.P2P
+namespace UbudKusCoin.Services.P2P
 {
 
     public class ConSession : TcpSession

@@ -27,9 +27,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Config\" />
-    <Folder Include="P2P\" />
     <Folder Include="obj\Debug\net5.0\Grpc\Protos\" />
     <Folder Include="DB\" />
+    <Folder Include="Models\" />
+    <Folder Include="Interfaces\" />
+    <Folder Include="Services\" />
+    <Folder Include="Services\P2P\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="**/*" />

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace UbudKusCoin
+namespace UbudKusCoin.Services
 {
     public delegate void EventHandler(object sender, EventArgs e);
     public class AllEvents
