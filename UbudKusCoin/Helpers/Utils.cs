@@ -50,7 +50,9 @@ namespace UbudKusCoin.Helpers
             return tmStamp;
 
         }
-
+        public static string CreateDbName(string port){
+            return "node_" + port + ".db";
+        }
         public static string CreateMerkleRoot(string[] txsHash)
         {
     

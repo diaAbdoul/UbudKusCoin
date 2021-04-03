@@ -1,10 +1,7 @@
 using EllipticCurve;
-using LiteDB;
 using System;
-using System.Collections.Generic;
 using UbudKusCoin.Helpers;
 using UbudKusCoin.Services;
-using UbudKusCoin.Services.DB;
 
 namespace UbudKusCoin.Models
 {
@@ -22,7 +19,7 @@ namespace UbudKusCoin.Models
         {
             try
             {
-                var trxPool = GetPool();
+                var trxPool =  ServiceManager.DbService.Transactions.GetPool();
                 trxPool.Insert(transaction);
                 return true;
             }
@@ -35,36 +32,10 @@ namespace UbudKusCoin.Models
 
         public static void Add(Transaction transaction)
         {
-            var transactions = GetAll();
+            var transactions = ServiceManager.DbService.Transactions.GetAll();
             transactions.Insert(transaction);
         }
 
-
-        public static ILiteCollection<Transaction> GetPool()
-        {
-            var coll = ServiceManager.DbService.DB.GetCollection<Transaction>(DbService.TBL_TRANSACTION_POOL);
-            return coll;
-        }
-
-        public static ILiteCollection<Transaction> GetAll()
-        {
-            var coll = ServiceManager.DbService.DB.GetCollection<Transaction>(DbService.TBL_TRANSACTIONS);
-            return coll;
-        }
-
-        /**
-        * get transaction list by name
-        */
-        public static IEnumerable<Transaction> GetTransactions(string address)
-        {
-            var coll = 
- ServiceManager.DbService.DB.GetCollection<Transaction>(DbService.TBL_TRANSACTIONS);
-            coll.EnsureIndex(x => x.TimeStamp);
-            //coll.EnsureIndex(x => x.Sender);
-            //coll.EnsureIndex(x => x.Recipient);
-            var transactions = coll.Find(x => x.Sender == address || x.Recipient == address);
-            return transactions;
-        }
 
         /**
         create transaction for each ico account
@@ -122,7 +93,7 @@ namespace UbudKusCoin.Models
             double spending = 0;
             double income = 0;
 
-            var collection = GetAll();
+            var collection =  ServiceManager.DbService.Transactions.GetAll();
             var transactions = collection.Find(x => x.Sender == address || x.Recipient == address);
 
             foreach (Transaction trx in transactions)

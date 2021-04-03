@@ -2,24 +2,28 @@
 using System.Linq;
 using System.Collections.Generic;
 using System;
-using UbudKusCoin.Services.DB;
 using UbudKusCoin.Helpers;
-using UbudKusCoin.Services;
+using UbudKusCoin.Models;
 
-namespace UbudKusCoin.Models
+namespace UbudKusCoin.Services
 {
-    public class Blockchain
+    public class ChainService
     {
-
         public const float COINT_REWARD = 0.01f;
 
-        public Blockchain()
+        public ChainService()
         {
-            Initialize();
-
-            //initilize stake
-            Stake.Initialize();
             Console.WriteLine(" initilize success ...");
+        }
+
+        internal object GetGenesisBlock()
+        {
+           return ServiceManager.DbService.Blocks.GetGenesisBlock();
+        }
+
+        public  void Start(){
+                 Initialize();
+            ServiceManager.DbService.Stakes.Initialize();
         }
 
         public static float GetCoinReward()
@@ -27,10 +31,10 @@ namespace UbudKusCoin.Models
             return COINT_REWARD;
         }
 
-        private static void Initialize()
+        private void Initialize()
         {
 
-            var blocks = GetBlocks();
+            var blocks = ServiceManager.DbService.Blocks.GetBlocks();
 
             if (blocks.Count() < 1)
             {
@@ -41,7 +45,7 @@ namespace UbudKusCoin.Models
                 Transaction.CreateIcoTransction();
 
                 // get all ico transaction from pool
-                var trxPool = Transaction.GetPool();
+                var trxPool = ServiceManager.DbService.Transactions.GetPool();
                 var transactions = trxPool.FindAll().ToList();
 
                 //convert transaction to json for more easy
@@ -51,7 +55,7 @@ namespace UbudKusCoin.Models
                 var block = Block.GenesisBlock(transactions);
 
                 // add genesis block to blockchain
-                AddBlock(block);
+                ServiceManager.DbService.Blocks.AddBlock(block);
 
                 // move all record in trx pool to transactions table
                 foreach (Transaction trx in transactions)
@@ -68,7 +72,7 @@ namespace UbudKusCoin.Models
 
         public static List<Block> GetBlocks(int pageNumber, int resultPerPage)
         {
-            var coll = ServiceManager.DbService.DB.GetCollection<Block>(DbService.TBL_BLOCKS);
+            var coll = ServiceManager.DbService.Blocks.GetBlocks();
             coll.EnsureIndex(x => x.Height);
             var query = coll.Query()
                 .OrderByDescending(x => x.Height)
@@ -77,62 +81,18 @@ namespace UbudKusCoin.Models
             return query;
         }
 
-        public static ILiteCollection<Block> GetBlocks()
+        public long GetHeight()
         {
-            var coll = 
- ServiceManager.DbService.DB.GetCollection<Block>(DbService.TBL_BLOCKS);
-            coll.EnsureIndex(x => x.Height);
-            return coll;
-        }
-
-
-
-        public static Block GetGenesisBlock()
-        {
-            var block = GetBlocks().FindAll().FirstOrDefault();
-            //var block = blockchain.FindOne(Query.All(Query.Ascending));
-            return block;
-        }
-
-        public static Block GetLastBlock()
-        {
-            var blockchain = GetBlocks();
-            var block = blockchain.FindOne(Query.All(Query.Descending));
-            return block;
-        }
-
-
-        public static Block GetBlockByHeight(int height)
-        {
-            var coll = GetBlocks();
-            var block = coll.Query().Where(x => x.Height == height).ToEnumerable();
-            if (block.Any())
-            {
-                return block.FirstOrDefault();
-            }
-            return null;           
-        }
-
-
-
-        public static long GetHeight()
-        {
-            var lastBlock = GetLastBlock();
+            var lastBlock = ServiceManager.DbService.Blocks.GetLastBlock();
             return lastBlock.Height;
         }
 
-        public static void AddBlock(Block block)
-        {
-            var blocks = GetBlocks();
-            blocks.Insert(block);
-        }
 
+        public int GetAdjustedDifficulty(Block latestBlock) {
 
-        public static int GetAdjustedDifficulty(Block latestBlock) {
-
-            var blocks = GetBlocks();
+            var blocks = ServiceManager.DbService.Blocks.GetBlocks();
             Console.WriteLine("==== GetAdjustedDifficulty");
-            var prevAdjustmentBlock = GetBlockByHeight(blocks.Count() - Constants.DIFFICULTY_ADJUSTMENT_INTERVAL);
+            var prevAdjustmentBlock = ServiceManager.DbService.Blocks.GetBlockByHeight(blocks.Count() - Constants.DIFFICULTY_ADJUSTMENT_INTERVAL);
 
             Console.WriteLine("prevAdjustmentBlock: " + prevAdjustmentBlock.TimeStamp);
             Console.WriteLine("latestBlock: " + latestBlock.TimeStamp);
@@ -158,9 +118,9 @@ namespace UbudKusCoin.Models
 
         }
 
-        public static int GetDifficullty()
+        public  int GetDifficullty()
         {
-            var latestBlock = GetLastBlock();
+            var latestBlock = ServiceManager.DbService.Blocks.GetLastBlock();
             Console.WriteLine("latestBlock.Height:" + latestBlock.Height);
             // Console.WriteLine("Constants.DIFFICULTY_ADJUSTMENT_INTERVAL:" + Constants.DIFFICULTY_ADJUSTMENT_INTERVAL);
 
@@ -174,19 +134,19 @@ namespace UbudKusCoin.Models
             }
         }
 
-        public static void BuildNewBlock()
+        public void BuildNewBlock()
         {
 
 
             // get transaction from pool
-            var trxPool = Transaction.GetPool();
+            var trxPool = ServiceManager.DbService.Transactions.GetPool();
 
             //// get last block to get prev hash and last height
-            var lastBlock = GetLastBlock();
+            var lastBlock = ServiceManager.DbService.Blocks.GetLastBlock();
             var height = lastBlock.Height + 1;
             var timestamp = Utils.GetTime();
             var prevHash = lastBlock.Hash;
-            var validator = Stake.GetValidator();
+            var validator = ServiceManager.DbService.Stakes.GetValidator();
 
 
             var transactions = new List<Transaction>(); // JsonConvert.SerializeObject(new List<Transaction>());
@@ -202,7 +162,7 @@ namespace UbudKusCoin.Models
                 TimeStamp = timestamp,
                 Sender = "UKC_rcyChuW7cQcIVoKi1LfSXKfCxZBHysTwyPm88ZsN0BM="
             };
-         
+
             if (trxPool.Count() > 0)
             {
                 //Get all tx from pool
@@ -233,7 +193,7 @@ namespace UbudKusCoin.Models
                 Validator = validator
             };
             block.Build();
-            AddBlock(block);
+            ServiceManager.DbService.Blocks.AddBlock(block);
 
             // event
             // Block created 
@@ -245,10 +205,6 @@ namespace UbudKusCoin.Models
             {
                 Transaction.Add(trx);
             }
-
-      
-
-
         }
 
         private static float GetTotalFees(IList<Transaction> txs)
@@ -271,7 +227,6 @@ namespace UbudKusCoin.Models
             Console.WriteLine(" = Number Of Tx: {0}", block.NumOfTx);
             Console.WriteLine(" = Amout       : {0}", block.TotalAmount);
             Console.WriteLine(" = Reward      : {0}", block.TotalReward);
-        
 
         }
     }

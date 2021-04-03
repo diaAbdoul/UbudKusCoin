@@ -42,7 +42,7 @@ namespace Main
             //app.UseGrpcWeb(); // Must be added between UseRouting and UseEndpoints
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGrpcService<BlockchainService>(); //.RequireHost("*:5008");
+                endpoints.MapGrpcService<UbudKusCoin.Services.Grpc.GrpcService>(); //.RequireHost("*:5008");
                 //endpoints.MapGrpcService<BlockchainService>().EnableGrpcWeb().RequireCors("AllowAll");
                 //endpoints.MapGrpcService<BlockchainService>().RequireCors("AllowAll"); ;
 

@@ -5,27 +5,29 @@ namespace UbudKusCoin.Services.DB
 {
     public class DbService
     {
-        public int port {set; get;}
-        public DbService(int port){
-            this.port = port;
-        }
-        public LiteDatabase DB { set; get; }
-
-        public const string DB_NAME = "node.db";
+        private LiteDatabase DB;
+        public BlockRepository Blocks;
+        public TransactionRepository Transactions;
+        public StakeRepository Stakes;
         public const string TBL_BLOCKS = "tbl_blocks";
         public const string TBL_TRANSACTION_POOL = "tbl_transaction_pool";
         public const string TBL_TRANSACTIONS = "tbl_transactions";
         public const string TBL_STACKER = "tbl_stacker";
 
+        public DbService(string name)
+        {
+            this.DB = new LiteDatabase(@"Datafile//" + name);
+        }
         /**
         it will create db with name node.db
         **/
         public void Start()
         {
-            DB = new LiteDatabase(@"Datafile//" + port + "_" + DB_NAME);
+            this.Blocks = new BlockRepository(this.DB);
+            this.Stakes = new StakeRepository(this.DB);
+            this.Transactions = new TransactionRepository(this.DB);
         }
 
-        
         /**
         Clear Database, delete all rows in each trable
         **/

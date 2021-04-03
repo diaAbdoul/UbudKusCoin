@@ -3,7 +3,7 @@ using System.Net;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Hosting;
-using UbudKusCoin.Models;
+using UbudKusCoin.Helpers;
 using UbudKusCoin.Services;
 using UbudKusCoin.Services.DB;
 using UbudKusCoin.Services.P2P;
@@ -15,62 +15,42 @@ namespace Main
         public static void Main(string[] args)
         {
 
-         
-
             // TCP server port
-            int port = 3000;
-            string[] nodePort = { port.ToString() };
+            int port = 3000; //default port
             if (args.Length > 0)
             {
-                port = int.Parse(args[0]);
-                nodePort[0] = args[0];
+                try
+                {
+                    port = int.Parse(args[0]);
+                }
+                catch
+                {
+                    Console.WriteLine("First argument should be port number, ex 3001\n use this commant 'dotnet run 3001'");
+                    return;
+                }
             }
 
-            // db need port for name databse in case
-            // all node run on one machine same folder
-
-            // DbService.Initialize(port);
-            ServiceManager.AddDB(new DbService(port));
-            ServiceManager.DbService.Start();
-            // blockchain
-            _ = new Blockchain();
-
-
-            Console.WriteLine($"TCP server port: {port}");
-
-            Console.WriteLine();
-
-
-
+            var dbName = Utils.CreateDbName(port.ToString());
             AllEvents evt = new AllEvents();
-        
-            // run all service 
-            ServiceManager.AddP2P(new P2PService(IPAddress.Any, port, evt));
-            ServiceManager.AddForger(new BlockForger(evt));
+            ServiceManager.Add(
+                new DbService(dbName),
+                new ChainService(),
+                new ForgerService(evt),
+                new P2PService(IPAddress.Any, port, evt)
+                );
+            ServiceManager.Start();
 
-            ServiceManager.Forger.Start();
-            ServiceManager.P2pService.StartServer();
-
-            if ( port!= 3000) {
-                ServiceManager.P2pService.Connect("127.0.0.1", 3000);
-            }    
 
             // grpc
-            IHost host = CreateHostBuilder(nodePort).Build();
-            //host.Services.UseScheduler(scheduler =>
-            //{
-            //    scheduler.Schedule<BlockJob>()
-            //        .EveryFifteenSeconds();
-            //});
+            IHost host = CreateHostBuilder(port).Build();
             host.Run();
 
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-           Host.CreateDefaultBuilder(args)
+        public static IHostBuilder CreateHostBuilder(int port) =>
+           Host.CreateDefaultBuilder()
           .ConfigureWebHostDefaults(webBuilder =>
           {
-              int port = int.Parse(args[0]);
               int portGrpc = port + 100;
               int portWebApi = portGrpc + 10;
               Console.WriteLine("== portGrpc: {0}, portWebApi {1}", portGrpc, portWebApi);

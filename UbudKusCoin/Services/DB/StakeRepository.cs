@@ -1,23 +1,27 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using LiteDB;
-using UbudKusCoin.Services;
-using UbudKusCoin.Services.DB;
+using UbudKusCoin.Models;
 
-namespace UbudKusCoin.Models
+namespace UbudKusCoin.Services.DB
 {
-    public class Staker
+    public class StakeRepository
     {
-        public string Address { set; get; }
-        public double Amount { set; get; }
-    }
-
-    public class Stake
-    {
+        private LiteDatabase _db;
 
         public static List<Staker> StakerList { get; set; }
+        public StakeRepository(LiteDatabase db)
+        {
+            this._db = db;
+        }
+        public ILiteCollection<Staker> GetAll()
+        {
+            var coll = this._db.GetCollection<Staker>(DbService.TBL_STACKER);
+            return coll;
+        }
 
-        public static void Add(Staker staker)
+
+        public void Add(Staker staker)
         {
             var stakes = GetAll();
 
@@ -28,13 +32,7 @@ namespace UbudKusCoin.Models
             StakerList.Add(staker);
         }
 
-        public static ILiteCollection<Staker> GetAll()
-        {
-            var coll = ServiceManager.DbService.DB.GetCollection<Staker>(DbService.TBL_STACKER);
-            return coll;
-        }
-
-        internal static void Initialize()
+        internal void Initialize()
         {
             StakerList = new List<Staker>();
             var staker = GetAll();
@@ -72,10 +70,9 @@ namespace UbudKusCoin.Models
                 StakerList.AddRange(GetAll().FindAll());
             }
 
-
         }
 
-        public static double GetStake(string address)
+        public double GetStake(string address)
         {
             double balance = 0;
             var collection = GetAll();
@@ -87,8 +84,7 @@ namespace UbudKusCoin.Models
             return balance;
         }
 
-
-        public static string GetValidator()
+        public string GetValidator()
         {
             var numOfStakes = StakerList.Count;
             var random = new Random();

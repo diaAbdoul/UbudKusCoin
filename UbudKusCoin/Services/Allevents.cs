@@ -5,7 +5,7 @@ namespace UbudKusCoin.Services
     public delegate void EventHandler(object sender, EventArgs e);
     public class AllEvents
     {
-        
+
         public AllEvents() { }
 
         public event EventHandler TransactionCreated;

@@ -6,12 +6,12 @@ using UbudKusCoin.Models;
 
 namespace UbudKusCoin.Services.Grpc
 {
-    public class BlockchainService : BChainService.BChainServiceBase
+    public class GrpcService : BChainService.BChainServiceBase
     {
 
         public override Task<BlockResponse> GenesisBlock(EmptyRequest request, ServerCallContext context)
         {
-            var block = Blockchain.GetGenesisBlock();
+            var block = ServiceManager.DbService.Blocks.GetGenesisBlock();
             BlockModel mdl = ConvertBlock(block);
 
             return Task.FromResult(new BlockResponse
@@ -32,7 +32,7 @@ namespace UbudKusCoin.Services.Grpc
 
         public override Task<BlockResponse> LastBlock(EmptyRequest request, ServerCallContext context)
         {
-            var block = Blockchain.GetLastBlock();
+            var block = ServiceManager.DbService.Blocks.GetLastBlock();
             BlockModel mdl = ConvertBlock(block);
             return Task.FromResult(new BlockResponse
             {
@@ -43,7 +43,7 @@ namespace UbudKusCoin.Services.Grpc
 
         public override Task<BlocksResponse> GetBlocks(BlockRequest request, ServerCallContext context)
         {
-            var blocks = Blockchain.GetBlocks(request.PageNumber, request.ResultPerPage);
+            var blocks = ChainService.GetBlocks(request.PageNumber, request.ResultPerPage);
 
             BlocksResponse response = new BlocksResponse();
             foreach (Block block in blocks)
@@ -58,7 +58,7 @@ namespace UbudKusCoin.Services.Grpc
         public override Task<TransactionsResponse> GetTransactions(AccountRequest request, ServerCallContext context)
         {
             TransactionsResponse response = new TransactionsResponse();
-            var transactions = Transaction.GetTransactions(request.Address);
+            var transactions = ServiceManager.DbService.Transactions.GetTransactions(request.Address);
             foreach (Transaction trx in transactions)
             {
                 TrxModel mdl = ConvertTrxModel(trx);

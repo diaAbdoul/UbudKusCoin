@@ -2,15 +2,14 @@
 using System.Threading;
 using System.Threading.Tasks;
 using UbudKusCoin.Helpers;
-using UbudKusCoin.Models;
 
 namespace UbudKusCoin.Services
 {
-    public class BlockForger
+    public class ForgerService
     {
         private AllEvents Evt;
 
-        public BlockForger(AllEvents evt)
+        public ForgerService(AllEvents evt)
         {
             Evt = evt;
         }
@@ -44,7 +43,7 @@ namespace UbudKusCoin.Services
                 //Int32 startTime = (int)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
 
                 Console.WriteLine("Generate Block{0}", i++);
-                Blockchain.BuildNewBlock();
+                ServiceManager.ChainService.BuildNewBlock();
 
                 Evt.InformBlockCreated();
 
@@ -59,11 +58,8 @@ namespace UbudKusCoin.Services
                 var remainTime = Constants.BLOCK_GENERATION_INTERVAL - (endTime - startTime);
 
                 Console.WriteLine("remain Time: {0}", remainTime);
-
                 Thread.Sleep(remainTime < 0 ? 0:remainTime * 1000);
-
             }
-          
         }
 
     }

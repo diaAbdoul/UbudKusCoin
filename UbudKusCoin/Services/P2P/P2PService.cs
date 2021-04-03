@@ -31,6 +31,12 @@ namespace UbudKusCoin.Services.P2P
             Console.WriteLine("P2P running!");
 
             ListenEvent();
+
+            if (Port != 3000)
+            {
+                Connect("127.0.0.1", 3000);
+            }
+
         }
 
         private void ListenEvent()
@@ -69,8 +75,7 @@ namespace UbudKusCoin.Services.P2P
             Console.WriteLine("P2P stopped...");
         }
 
-
-        public  void Connect(string destAddress, int destPort)
+        public void Connect(string destAddress, int destPort)
         {
 
             // start client, start client
