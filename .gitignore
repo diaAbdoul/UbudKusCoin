@@ -1,6 +1,6 @@
 ﻿/UbudKusCoin/obj
 /UbudKusCoin/bin
-/UbudKusCoin/*.db
+/UbudKusCoin/Datafile/*.db
 
 /BlockExplorer/obj/*
 /BlockExplorer/bin/
