@@ -1,4 +1,4 @@
-# UbudKusCoin
+# UBUDKUS Coin
 Simple Cryptocurrencies with Proof Of Stake  Consensus Algorithm.
 
 Developed with C# and .Net 5.0
@@ -31,13 +31,23 @@ First install .Net Core SDK 5.0
 
 ```
 
-To run Blockchain core, after above command
+To run Blockchain core
+Run main node, will use port number 3000
 
 ```
 > cd UbudKuscoin
-> dotnet run
+> dotnet run   
 
 ```
+
+Run additional node add port number, example
+
+```
+> dotnet run 3010 
+
+```
+
+
 
 To run BlockExplorer
 
