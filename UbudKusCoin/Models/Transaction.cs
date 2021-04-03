@@ -43,7 +43,7 @@ namespace UbudKusCoin.Models
         public static void CreateIcoTransction()
         {
             var timeStamp = Utils.GetTime();
-            foreach (var acc in IcoBalance.GetIcoAccounts())
+            foreach (var acc in Account.GetICOs())
             {
 
                 var newTrx = new Transaction()
@@ -66,7 +66,7 @@ namespace UbudKusCoin.Models
         public static void CreateGenesisTransction()
         {
             var timeStamp = Utils.GetTime();
-            foreach (var acc in Genesis.GetAll())
+            foreach (var acc in Account.GetGenesis())
             {
 
                 var newTrx = new Transaction()

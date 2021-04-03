@@ -51,7 +51,7 @@ namespace UbudKusCoin.Models
             var ts = 1498018714; //21 june 2017
 
             // for genesis bloc we set creatoris first of Genesis Account
-            var validator = Genesis.GetAll().FirstOrDefault();
+            var validator = Account.GetGenesis().FirstOrDefault();
             var block = new Block
             {
                 Height = 0,
