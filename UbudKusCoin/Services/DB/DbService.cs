@@ -11,7 +11,7 @@ namespace UbudKusCoin.Services.DB
         }
         public LiteDatabase DB { set; get; }
 
-        public const string DB_NAME = @"Datafile//node.db";
+        public const string DB_NAME = "node.db";
         public const string TBL_BLOCKS = "tbl_blocks";
         public const string TBL_TRANSACTION_POOL = "tbl_transaction_pool";
         public const string TBL_TRANSACTIONS = "tbl_transactions";
@@ -22,7 +22,7 @@ namespace UbudKusCoin.Services.DB
         **/
         public void Start()
         {
-            DB = new LiteDatabase(DB_NAME + port);
+            DB = new LiteDatabase(@"Datafile//" + port + "_" + DB_NAME);
         }
 
         
