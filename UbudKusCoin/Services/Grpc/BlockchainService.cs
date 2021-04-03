@@ -1,11 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Grpc.Core;
-using Main;
+using GrpcService;
 using Newtonsoft.Json;
-using UbudKusCoin;
+using UbudKusCoin.Models;
 
-namespace GrpcService.Services
+namespace UbudKusCoin.Services.Grpc
 {
     public class BlockchainService : BChainService.BChainServiceBase
     {

@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System;
-using UbudKusCoin;
+using UbudKusCoin.Helpers;
 
-namespace Main
+namespace UbudKusCoin.Models
 {
 
     public class Block

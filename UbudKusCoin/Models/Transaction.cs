@@ -2,9 +2,11 @@ using EllipticCurve;
 using LiteDB;
 using System;
 using System.Collections.Generic;
-using UbudKusCoin;
+using UbudKusCoin.Helpers;
+using UbudKusCoin.Services;
+using UbudKusCoin.Services.DB;
 
-namespace Main
+namespace UbudKusCoin.Models
 {
 
     public class Transaction
@@ -28,7 +30,7 @@ namespace Main
             {
                 return false;
             }
-           
+
         }
 
         public static void Add(Transaction transaction)
@@ -40,13 +42,13 @@ namespace Main
 
         public static ILiteCollection<Transaction> GetPool()
         {
-            var coll = DbAccess.DB.GetCollection<Transaction>(DbAccess.TBL_TRANSACTION_POOL);
+            var coll = ServiceManager.DbService.DB.GetCollection<Transaction>(DbService.TBL_TRANSACTION_POOL);
             return coll;
         }
 
         public static ILiteCollection<Transaction> GetAll()
         {
-            var coll = DbAccess.DB.GetCollection<Transaction>(DbAccess.TBL_TRANSACTIONS);
+            var coll = ServiceManager.DbService.DB.GetCollection<Transaction>(DbService.TBL_TRANSACTIONS);
             return coll;
         }
 
@@ -55,7 +57,8 @@ namespace Main
         */
         public static IEnumerable<Transaction> GetTransactions(string address)
         {
-            var coll = DbAccess.DB.GetCollection<Transaction>(DbAccess.TBL_TRANSACTIONS);
+            var coll = 
+ ServiceManager.DbService.DB.GetCollection<Transaction>(DbService.TBL_TRANSACTIONS);
             coll.EnsureIndex(x => x.TimeStamp);
             //coll.EnsureIndex(x => x.Sender);
             //coll.EnsureIndex(x => x.Recipient);

@@ -1,6 +1,6 @@
 ﻿syntax = "proto3";
 
-import "Grpc/Protos/version.proto";
+import "Services/Grpc/Protos/version.proto";
 
 option csharp_namespace = "GrpcService";
 

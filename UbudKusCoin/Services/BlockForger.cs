@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Main;
-using UbudKusCoin.Main;
+using UbudKusCoin.Helpers;
+using UbudKusCoin.Models;
 
 namespace UbudKusCoin.Services
 {
@@ -16,7 +16,7 @@ namespace UbudKusCoin.Services
         }
 
         private CancellationTokenSource cancelTask;
-        
+
         public void Start()
         {
             cancelTask = new CancellationTokenSource();
@@ -43,7 +43,7 @@ namespace UbudKusCoin.Services
                 var startTime = DateTime.Now.Second;
                 //Int32 startTime = (int)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
 
-                Console.WriteLine("Generate Block{0}", i++);              
+                Console.WriteLine("Generate Block{0}", i++);
                 Blockchain.BuildNewBlock();
 
                 Evt.InformBlockCreated();

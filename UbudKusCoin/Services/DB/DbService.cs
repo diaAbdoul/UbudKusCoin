@@ -1,13 +1,17 @@
 using LiteDB;
+using UbudKusCoin.Models;
 
-namespace Main
+namespace UbudKusCoin.Services.DB
 {
-    public class DbAccess
+    public class DbService
     {
+        public int port {set; get;}
+        public DbService(int port){
+            this.port = port;
+        }
+        public LiteDatabase DB { set; get; }
 
-        public static LiteDatabase DB { set; get; }
-
-        public const string DB_NAME = @"DB//node.db";
+        public const string DB_NAME = @"Datafile//node.db";
         public const string TBL_BLOCKS = "tbl_blocks";
         public const string TBL_TRANSACTION_POOL = "tbl_transaction_pool";
         public const string TBL_TRANSACTIONS = "tbl_transactions";
@@ -16,15 +20,16 @@ namespace Main
         /**
         it will create db with name node.db
         **/
-        public static void Initialize(int port)
+        public void Start()
         {
             DB = new LiteDatabase(DB_NAME + port);
         }
 
+        
         /**
         Clear Database, delete all rows in each trable
         **/
-        public static void ClearDB()
+        public void Clear()
         {
             var coll = DB.GetCollection<Block>(TBL_BLOCKS);
             coll.DeleteAll();
@@ -43,7 +48,7 @@ namespace Main
         /**
          * Close database when app closed
          **/
-        public static void CloseDB()
+        public void Close()
         {
             DB.Dispose();
         }

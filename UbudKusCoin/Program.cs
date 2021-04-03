@@ -3,7 +3,9 @@ using System.Net;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Hosting;
+using UbudKusCoin.Models;
 using UbudKusCoin.Services;
+using UbudKusCoin.Services.DB;
 using UbudKusCoin.Services.P2P;
 
 namespace Main
@@ -27,8 +29,9 @@ namespace Main
             // db need port for name databse in case
             // all node run on one machine same folder
 
-            DbAccess.Initialize(port);
-
+            // DbService.Initialize(port);
+            ServiceManager.AddDB(new DbService(port));
+            ServiceManager.DbService.Start();
             // blockchain
             _ = new Blockchain();
 
@@ -42,10 +45,9 @@ namespace Main
             AllEvents evt = new AllEvents();
         
             // run all service 
-            ServiceManager.Add(
-                new P2PService(IPAddress.Any, port, evt),
-                new BlockForger(evt)
-            );
+            ServiceManager.AddP2P(new P2PService(IPAddress.Any, port, evt));
+            ServiceManager.AddForger(new BlockForger(evt));
+
             ServiceManager.Forger.Start();
             ServiceManager.P2pService.StartServer();
 

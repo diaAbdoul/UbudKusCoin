@@ -4,7 +4,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Main
+namespace UbudKusCoin.Helpers
 {
     public static class Utils
     {

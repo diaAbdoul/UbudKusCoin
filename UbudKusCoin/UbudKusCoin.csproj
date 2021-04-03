@@ -22,8 +22,8 @@
     <PackageReference Include="NetCoreServer" Version="5.0.13" />
   </ItemGroup>
   <ItemGroup>
-    <Protobuf Include="Grpc\Protos\bchain.proto" GrpcServices="Server" />
-    <Protobuf Include="Grpc\Protos\version.proto" GrpcServices="Server" />
+    <Protobuf Include="Services\Grpc\Protos\bchain.proto" GrpcServices="Server" />
+    <Protobuf Include="Services\Grpc\Protos\version.proto" GrpcServices="Server" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Config\" />

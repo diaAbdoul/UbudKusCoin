@@ -1,11 +1,12 @@
 ﻿using LiteDB;
 using System.Linq;
 using System.Collections.Generic;
-using UbudKusCoin;
 using System;
-using UbudKusCoin.Main;
+using UbudKusCoin.Services.DB;
+using UbudKusCoin.Helpers;
+using UbudKusCoin.Services;
 
-namespace Main
+namespace UbudKusCoin.Models
 {
     public class Blockchain
     {
@@ -67,7 +68,7 @@ namespace Main
 
         public static List<Block> GetBlocks(int pageNumber, int resultPerPage)
         {
-            var coll = DbAccess.DB.GetCollection<Block>(DbAccess.TBL_BLOCKS);
+            var coll = ServiceManager.DbService.DB.GetCollection<Block>(DbService.TBL_BLOCKS);
             coll.EnsureIndex(x => x.Height);
             var query = coll.Query()
                 .OrderByDescending(x => x.Height)
@@ -78,7 +79,8 @@ namespace Main
 
         public static ILiteCollection<Block> GetBlocks()
         {
-            var coll = DbAccess.DB.GetCollection<Block>(DbAccess.TBL_BLOCKS);
+            var coll = 
+ ServiceManager.DbService.DB.GetCollection<Block>(DbService.TBL_BLOCKS);
             coll.EnsureIndex(x => x.Height);
             return coll;
         }

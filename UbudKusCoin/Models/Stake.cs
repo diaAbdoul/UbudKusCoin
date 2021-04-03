@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using LiteDB;
-using Main;
+using UbudKusCoin.Services;
+using UbudKusCoin.Services.DB;
 
-namespace UbudKusCoin
+namespace UbudKusCoin.Models
 {
     public class Staker
     {
@@ -29,7 +30,7 @@ namespace UbudKusCoin
 
         public static ILiteCollection<Staker> GetAll()
         {
-            var coll = DbAccess.DB.GetCollection<Staker>(DbAccess.TBL_STACKER);
+            var coll = ServiceManager.DbService.DB.GetCollection<Staker>(DbService.TBL_STACKER);
             return coll;
         }
 

@@ -1,4 +1,4 @@
-﻿namespace UbudKusCoin.Main
+﻿namespace UbudKusCoin.Helpers
 {
     public class Constants
     {

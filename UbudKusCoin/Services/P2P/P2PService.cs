@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
-using UbudKusCoin.Services;
 
 namespace UbudKusCoin.Services.P2P
 {
