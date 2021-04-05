@@ -7,7 +7,7 @@ namespace UbudKusCoin.Services.DB
 {
     public class StakeRepository
     {
-        private LiteDatabase _db;
+        private readonly LiteDatabase _db;
 
         public static List<Staker> StakerList { get; set; }
         public StakeRepository(LiteDatabase db)

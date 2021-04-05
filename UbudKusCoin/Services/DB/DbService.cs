@@ -1,3 +1,4 @@
+using System;
 using LiteDB;
 using UbudKusCoin.Models;
 
@@ -5,7 +6,7 @@ namespace UbudKusCoin.Services.DB
 {
     public class DbService
     {
-        private LiteDatabase DB;
+        private readonly LiteDatabase DB;
         public BlockRepository Blocks;
         public TransactionRepository Transactions;
         public StakeRepository Stakes;
@@ -17,15 +18,16 @@ namespace UbudKusCoin.Services.DB
         public DbService(string name)
         {
             this.DB = new LiteDatabase(@"Datafile//" + name);
+            this.Blocks = new BlockRepository(this.DB);
+            this.Stakes = new StakeRepository(this.DB);
+            this.Transactions = new TransactionRepository(this.DB);
         }
         /**
         it will create db with name node.db
         **/
         public void Start()
         {
-            this.Blocks = new BlockRepository(this.DB);
-            this.Stakes = new StakeRepository(this.DB);
-            this.Transactions = new TransactionRepository(this.DB);
+            Console.WriteLine("Db Started...");
         }
 
         /**

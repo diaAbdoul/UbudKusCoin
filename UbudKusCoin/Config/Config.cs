@@ -20,7 +20,4 @@
 
         public static string[] KnownNodes { get => knownNodes; set => knownNodes = value; }
     }
-
-
-
 }

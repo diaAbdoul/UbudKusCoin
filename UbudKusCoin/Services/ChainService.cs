@@ -10,10 +10,16 @@ namespace UbudKusCoin.Services
     public class ChainService
     {
         public const float COINT_REWARD = 0.01f;
+        public event EventHandler<Block> EventBlockCreated;
 
         public ChainService()
         {
             Console.WriteLine(" initilize success ...");
+        }
+
+        protected virtual void OnEventBlockCreated(Block arg)
+        {
+            EventBlockCreated?.Invoke(this, arg);
         }
 
         internal object GetGenesisBlock()
@@ -70,7 +76,7 @@ namespace UbudKusCoin.Services
 
         }
 
-        public static List<Block> GetBlocks(int pageNumber, int resultPerPage)
+        public List<Block> GetBlocks(int pageNumber, int resultPerPage)
         {
             var coll = ServiceManager.DbService.Blocks.GetBlocks();
             coll.EnsureIndex(x => x.Height);
@@ -193,12 +199,13 @@ namespace UbudKusCoin.Services
                 Validator = validator
             };
             block.Build();
+
+            //triger event block created
+            OnEventBlockCreated(block);
+
             ServiceManager.DbService.Blocks.AddBlock(block);
 
-            // event
-            // Block created 
-
-           // PrintBlock(block);
+            // PrintBlock(block);
 
             // move all record in trx pool to transactions table
             foreach (var trx in transactions)
@@ -213,21 +220,5 @@ namespace UbudKusCoin.Services
             return totFee;
         }
 
-        private static void PrintBlock(Block block)
-        {
-            Console.WriteLine("\n===========\nNew Block");
-            Console.WriteLine(" = Height      : {0}", block.Height);
-            Console.WriteLine(" = Version     : {0}", block.Version);
-            Console.WriteLine(" = Prev Hash   : {0}", block.PrevHash);
-            Console.WriteLine(" = Merkle Hash : {0}", block.MerkleRoot);
-            Console.WriteLine(" = Timestamp   : {0}", Utils.ToDateTime(block.TimeStamp));
-            Console.WriteLine(" = Difficulty  : {0}", block.Difficulty);
-            Console.WriteLine(" = Validator   : {0}", block.Validator);
-
-            Console.WriteLine(" = Number Of Tx: {0}", block.NumOfTx);
-            Console.WriteLine(" = Amout       : {0}", block.TotalAmount);
-            Console.WriteLine(" = Reward      : {0}", block.TotalReward);
-
-        }
     }
 }

@@ -31,12 +31,11 @@ namespace Main
             }
 
             var dbName = Utils.CreateDbName(port.ToString());
-            AllEvents evt = new AllEvents();
             ServiceManager.Add(
                 new DbService(dbName),
                 new ChainService(),
-                new ForgerService(evt),
-                new P2PService(IPAddress.Any, port, evt)
+                new ForgerService(),
+                new P2PService(IPAddress.Any, port)
                 );
             ServiceManager.Start();
 

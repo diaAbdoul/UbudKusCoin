@@ -1,38 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using UbudKusCoin.Helpers;
+using UbudKusCoin.Models;
 
 namespace UbudKusCoin.Services.P2P
 {
     public class P2PService
     {
-        public AllEvents Evt { set; get;}
-        public P2PServer Server { set; get; }
-        public IPAddress Address { set; get; }
-        public int Port { set; get; }
+        private P2PServer _server { set; get; }
+        private IPAddress _address { set; get; }
+        private int _port { set; get; }
 
 
         public readonly IDictionary<string, P2PClient> KnownPeers = new Dictionary<string, P2PClient>();
 
-        public P2PService(IPAddress address, int port, AllEvents evt)
+        public P2PService(IPAddress address, int port)
         {
-            this.Evt = evt;
-            Address = address;
-            Port = port;
-            Server = new P2PServer(address, port);
+            _address = address;
+            _port = port;
+            _server = new P2PServer(address, port);
         }
 
 
-        public void StartServer()
+        public void Start()
         {
             // Start the server
             Console.WriteLine("P2P starting ...");
-            Server.Start();
+            _server.Start();
             Console.WriteLine("P2P running!");
 
             ListenEvent();
 
-            if (Port != 3000)
+            if (_port != 3000)
             {
                 Connect("127.0.0.1", 3000);
             }
@@ -42,19 +42,20 @@ namespace UbudKusCoin.Services.P2P
         private void ListenEvent()
         {
             //Console.WriteLine("... this is listerner ...");
-            this.Evt.BlockCreated += Evt_BlockCreated;
-            this.Evt.TransactionCreated += Evt_TransactionCreated;
+            ServiceManager.ChainService.EventBlockCreated += Evt_EventBlockCreated;
+            // Evt.TransactionCreated += Evt_TransactionCreated;
         }
 
-        void Evt_BlockCreated(object sender, EventArgs e)
+        void Evt_EventBlockCreated(object sender, Block block)
         {
             //if (sender == null)
             //{
             //    Console.WriteLine("No New Block Added.");
             //    return;
             //}
-            Console.WriteLine("A New Block created.");
-            BroadCast("A New Block from: " + Port);
+            Console.WriteLine("putu kusuma create block.");
+            Utils.PrintBlock(block);
+            // BroadCast("A New Block from: " + _port);
         }
 
         void Evt_TransactionCreated(object sender, EventArgs e)
@@ -67,11 +68,11 @@ namespace UbudKusCoin.Services.P2P
             Console.WriteLine("A New Transaction Created.");
         }
 
-        public void StopServer()
+        public void Stop()
         {
             // Stop the server
             Console.WriteLine("P2P stopping...");
-            Server.Stop();
+            _server.Stop();
             Console.WriteLine("P2P stopped...");
         }
 

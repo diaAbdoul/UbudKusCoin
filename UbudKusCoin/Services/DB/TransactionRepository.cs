@@ -7,7 +7,7 @@ namespace UbudKusCoin.Services.DB
     public class TransactionRepository
     {
 
-        private LiteDatabase _db;
+        private readonly LiteDatabase _db;
         public TransactionRepository(LiteDatabase db)
         {
             this._db = db;

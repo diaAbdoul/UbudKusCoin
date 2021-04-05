@@ -7,10 +7,10 @@ namespace UbudKusCoin.Services.DB
     public class BlockRepository
     {
 
-        private LiteDatabase _db;
+        private readonly LiteDatabase _db;
         public BlockRepository(LiteDatabase db)
         {
-            this._db = db;
+            _db = db;
         }
 
         public ILiteCollection<Block> GetBlocks()

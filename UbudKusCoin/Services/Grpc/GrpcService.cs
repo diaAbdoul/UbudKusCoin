@@ -43,7 +43,7 @@ namespace UbudKusCoin.Services.Grpc
 
         public override Task<BlocksResponse> GetBlocks(BlockRequest request, ServerCallContext context)
         {
-            var blocks = ChainService.GetBlocks(request.PageNumber, request.ResultPerPage);
+            var blocks = ServiceManager.ChainService.GetBlocks(request.PageNumber, request.ResultPerPage);
 
             BlocksResponse response = new BlocksResponse();
             foreach (Block block in blocks)

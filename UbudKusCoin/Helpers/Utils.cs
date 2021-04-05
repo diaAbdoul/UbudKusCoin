@@ -3,6 +3,7 @@ using System.Security.Cryptography;
 using System.Linq;
 using System.Collections.Generic;
 using System.Text;
+using UbudKusCoin.Models;
 
 namespace UbudKusCoin.Helpers
 {
@@ -37,7 +38,7 @@ namespace UbudKusCoin.Helpers
 
         public static DateTime ToDateTime(long unixTime)
         {
-            DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+            var dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
             dtDateTime = dtDateTime.AddSeconds(unixTime).ToLocalTime();
             return dtDateTime;
         }
@@ -50,12 +51,13 @@ namespace UbudKusCoin.Helpers
             return tmStamp;
 
         }
-        public static string CreateDbName(string port){
+        public static string CreateDbName(string port)
+        {
             return "node_" + port + ".db";
         }
         public static string CreateMerkleRoot(string[] txsHash)
         {
-    
+
             while (true)
             {
                 if (txsHash.Length == 0)
@@ -68,7 +70,7 @@ namespace UbudKusCoin.Helpers
                     return txsHash[0];
                 }
 
-                List<string> newHashList = new List<string>();
+                var newHashList = new List<string>();
 
                 int len = (txsHash.Length % 2 != 0) ? txsHash.Length - 1 : txsHash.Length;
 
@@ -104,6 +106,22 @@ namespace UbudKusCoin.Helpers
         }
 
 
+        public static void PrintBlock(Block block)
+        {
+            Console.WriteLine("\n===========\nNew Block");
+            Console.WriteLine(" = Height      : {0}", block.Height);
+            Console.WriteLine(" = Version     : {0}", block.Version);
+            Console.WriteLine(" = Prev Hash   : {0}", block.PrevHash);
+            Console.WriteLine(" = Merkle Hash : {0}", block.MerkleRoot);
+            Console.WriteLine(" = Timestamp   : {0}", Utils.ToDateTime(block.TimeStamp));
+            Console.WriteLine(" = Difficulty  : {0}", block.Difficulty);
+            Console.WriteLine(" = Validator   : {0}", block.Validator);
+
+            Console.WriteLine(" = Number Of Tx: {0}", block.NumOfTx);
+            Console.WriteLine(" = Amout       : {0}", block.TotalAmount);
+            Console.WriteLine(" = Reward      : {0}", block.TotalReward);
+
+        }
     }
 
 

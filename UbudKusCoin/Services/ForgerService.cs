@@ -7,14 +7,13 @@ namespace UbudKusCoin.Services
 {
     public class ForgerService
     {
-        private AllEvents Evt;
-
-        public ForgerService(AllEvents evt)
-        {
-            Evt = evt;
-        }
 
         private CancellationTokenSource cancelTask;
+
+        public ForgerService()
+        {
+            Console.WriteLine("forge started...");
+        }
 
         public void Start()
         {
@@ -30,10 +29,6 @@ namespace UbudKusCoin.Services
             Console.WriteLine("Forger Stoped");
         }
 
-
-
-
-
         public void DoGenerateBlock()
         {
             int i = 0;
@@ -45,9 +40,7 @@ namespace UbudKusCoin.Services
                 Console.WriteLine("Generate Block{0}", i++);
                 ServiceManager.ChainService.BuildNewBlock();
 
-                Evt.InformBlockCreated();
-
-                Random _random = new Random();
+                var _random = new Random();
                 int num = _random.Next(3000, 20000);
 
                 Thread.Sleep(num);

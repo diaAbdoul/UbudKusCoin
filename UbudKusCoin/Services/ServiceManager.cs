@@ -28,7 +28,7 @@ namespace UbudKusCoin.Services
           DbService.Start();
           ChainService.Start();
           ForgerService.Start();
-          P2pService.StartServer();
+          P2pService.Start();
         }
 
          public static void Stop()
